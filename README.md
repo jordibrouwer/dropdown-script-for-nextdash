@@ -1,4 +1,3 @@
-# dropdown-script-for-nextdash
 # NextDash Dropzone 5 Action
 
 > Seamlessly save URLs from macOS to your self-hosted [NextDash](https://github.com/jordibrouwer/nextdash) instance with a single click or drag-and-drop gesture using **Dropzone 5**.

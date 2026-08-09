@@ -534,6 +534,7 @@ Do **not** merge `dev` into `main` manually on GitHub — the compare banner aft
 
 ---
 
+<<<<<<< HEAD
 ## Links
 - **Personal website:** [jordibrw.nl](https://jordibrw.nl)
 - **Nextdash website:** [nextdash.cc](https://nextdash.cc)
@@ -545,3 +546,96 @@ Do **not** merge `dev` into `main` manually on GitHub — the compare banner aft
 ## License
 
 MIT
+=======
+## Action Source Code (`action.rb`)
+
+If you prefer to inspect or customize the Ruby code manually, create a folder named `NextDash.dzbundle` in your Dropzone actions directory (`~/Library/Application Support/Dropzone 5/Actions/`) and save the code below as `action.rb`:
+
+```ruby
+# Dropzone Action Info
+# Name: NextDash Bookmark
+# Description: Saves a URL to NextDash via the API
+# Handles: Text, URLs
+# Creator: Jordi Brouwer
+# URL: https://github.com/jordibrouwer/nextdash
+# Events: Clicked, Dragged
+# SkipConfig: No
+# Version: 1.0
+# MinDropzoneVersion: 4.0
+
+require 'net/http'
+require 'uri'
+require 'json'
+
+# --- Configuration ---
+# Replace with your actual NextDash instance URL (Tailscale, Nginx proxy, or local IP)
+NEXTDASH_URL = "https://nextdash.example.com/api/inbox"
+
+# Optional: Add your NEXTDASH_WRITE_TOKEN if your instance requires token auth
+WRITE_TOKEN = ""
+
+def save_to_nextdash(url_string)
+  $dz.begin("Saving bookmark to NextDash...")
+  
+  uri = URI.parse(NEXTDASH_URL)
+  request = Net::HTTP::Post.new(uri)
+  request.content_type = "application/json"
+  
+  unless WRITE_TOKEN.empty?
+    request["X-NextDash-Token"] = WRITE_TOKEN
+  end
+  
+  request.body = JSON.dump({ url: url_string.strip })
+
+  req_options = {
+    use_ssl: uri.scheme == "https"
+  }
+
+  begin
+    response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
+      http.request(request)
+    end
+
+    if response.code.to_i == 200 || response.code.to_i == 201
+      $dz.finish("Bookmark saved to NextDash!")
+    else
+      $dz.fail("Error: HTTP #{response.code}")
+    end
+  rescue => e
+    $dz.fail("Connection error: #{e.message}")
+  end
+end
+
+def dragged
+  $dz.begin("Processing URL...")
+  url = $items[0]
+  save_to_nextdash(url)
+end
+
+def clicked
+  clipboard_text = $dz.read_clipboard
+  if clipboard_text && (clipboard_text.start_with?("http://") || clipboard_text.start_with?("https://"))
+    save_to_nextdash(clipboard_text)
+  else
+    $dz.fail("No valid URL found on clipboard.")
+  end
+end
+```
+
+---
+
+## How to Use It
+
+Once configured, capturing links takes less than a second:
+
+- **Method 1 (Clipboard Click):** Copy any web link (`Cmd + C`) while browsing in Safari, Chrome, or Firefox. Click the **NextDash Bookmark** icon in your Dropzone grid. The action reads your clipboard and sends the URL straight to your NextDash inbox.
+- **Method 2 (Drag & Drop):** Highlight a URL or link element in your browser, drag it up to the macOS menu bar to open Dropzone, and drop it onto the **NextDash Bookmark** action tile.
+
+---
+
+## License & Links
+
+- **Main Project:** [NextDash GitHub Repository](https://github.com/jordibrouwer/nextdash)
+- **Blog Post:** [Seamless Bookmarking: How to Save URLs to NextDash Using Dropzone 5 on macOS](https://nextdash.cc/2026/08/09/seamless-bookmarking-how-to-save-urls-to-nextdash-using-dropzone-5-on-macos/)
+- **Dropzone App:** [Aptonic Dropzone 5](https://aptonic.com)
+>>>>>>> parent of cd3a2fa (Add personal website link to README)

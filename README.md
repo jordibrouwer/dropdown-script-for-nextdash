@@ -212,4 +212,5 @@ Once configured, capturing links takes less than a second:
 
 - **Main Project:** [NextDash GitHub Repository](https://github.com/jordibrouwer/nextdash)
 - **Blog Post:** [Seamless Bookmarking: How to Save URLs to NextDash Using Dropzone 5 on macOS](https://nextdash.cc/2026/08/09/seamless-bookmarking-how-to-save-urls-to-nextdash-using-dropzone-5-on-macos/)
+- **Personal website:** [jordibrw.nl](https://jordibrw.nl)
 - **Dropzone App:** [Aptonic Dropzone 5](https://aptonic.com)
